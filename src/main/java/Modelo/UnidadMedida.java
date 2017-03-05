@@ -12,7 +12,7 @@ package Modelo;
 public class UnidadMedida {
     private int id_unidad;
     private String descripcion;
-//test
+//testerge
     /**
      * @return the id_unidad
      */

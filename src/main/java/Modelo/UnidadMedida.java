@@ -10,20 +10,20 @@ package Modelo;
  * @author Saul
  */
 public class UnidadMedida {
-    private int id_unidad;
+    private String id_unidad;
     private String descripcion;
 //testerge
     /**
      * @return the id_unidad
      */
-    public int getId_unidad() {
+    public String getId_unidad() {
         return id_unidad;
     }
 
     /**
      * @param id_unidad the id_unidad to set
      */
-    public void setId_unidad(int id_unidad) {
+    public void setId_unidad(String id_unidad) {
         this.id_unidad = id_unidad;
     }
 

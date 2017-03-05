@@ -134,7 +134,55 @@ public class ctrlarticulo {
         AddClasificacion(clasificacion);
            */
         
+        //Inserción de la categoria abarrotes comestibles
+        /**
+        Clasificacion clasificacion = new Clasificacion();
+        clasificacion.setIdclasificacion(13);
+        clasificacion.setId_clasificacion_dep(2);
+        clasificacion.setDescripcion("ABARROTES COMESTIBLES");
+        clasificacion.setNivelclasificacion(2);
+        AddClasificacion(clasificacion);
+        */
         
+        //Insercion subcategoria bebidas
+        /**
+        Clasificacion clasificacion = new Clasificacion();
+        clasificacion.setIdclasificacion(38);
+        clasificacion.setId_clasificacion_dep(13);
+        clasificacion.setDescripcion("BEBIDAS");
+        clasificacion.setNivelclasificacion(3);
+        AddClasificacion(clasificacion);
+        */
+        
+        //Insercion subcategoria botanas
+        /**
+        Clasificacion clasificacion = new Clasificacion();
+        clasificacion.setIdclasificacion(39);
+        clasificacion.setId_clasificacion_dep(13);
+        clasificacion.setDescripcion("BOTANAS");
+        clasificacion.setNivelclasificacion(3);
+        AddClasificacion(clasificacion);
+        */ 
+        
+        //Insercion linea Cerveza
+        /**
+        Clasificacion clasificacion = new Clasificacion();
+        clasificacion.setIdclasificacion(182);
+        clasificacion.setId_clasificacion_dep(38);
+        clasificacion.setDescripcion("CERVEZA");
+        clasificacion.setNivelclasificacion(4);
+        AddClasificacion(clasificacion);
+         */ 
+        
+        //Insercion linea Cerveza
+        /**
+        Clasificacion clasificacion = new Clasificacion();
+        clasificacion.setIdclasificacion(193);
+        clasificacion.setId_clasificacion_dep(39);
+        clasificacion.setDescripcion("FRITURAS");
+        clasificacion.setNivelclasificacion(4);
+        AddClasificacion(clasificacion);
+        */ 
         
     }
     

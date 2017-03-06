@@ -174,7 +174,7 @@ public class ctrlarticulo {
         AddClasificacion(clasificacion);
          */ 
         
-        //Insercion linea Cerveza
+        //Insercion linea Frituras
         /**
         Clasificacion clasificacion = new Clasificacion();
         clasificacion.setIdclasificacion(193);

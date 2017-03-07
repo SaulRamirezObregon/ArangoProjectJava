@@ -253,6 +253,11 @@ public class FrmArticulos extends javax.swing.JFrame {
         btnGuardarArticulo.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnGuardarArticulo.setForeground(new java.awt.Color(51, 51, 51));
         btnGuardarArticulo.setText("Guardar artículo");
+        btnGuardarArticulo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarArticuloActionPerformed(evt);
+            }
+        });
         pnlAnexos.add(btnGuardarArticulo);
         btnGuardarArticulo.setBounds(10, 343, 200, 30);
         pnlAnexos.add(chbIVA);
@@ -389,6 +394,10 @@ public class FrmArticulos extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(995, 530));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnGuardarArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarArticuloActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnGuardarArticuloActionPerformed
 
     /**
      * @param args the command line arguments

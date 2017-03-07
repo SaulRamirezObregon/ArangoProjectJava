@@ -10,7 +10,7 @@ package Modelo;
  * @author Saul
  */
 public class Proveedor {
-    private int idproveedor;
+    private String idproveedor;
     private String rfc;
     private String razonsocial;
     private String direccion;
@@ -23,14 +23,14 @@ public class Proveedor {
     /**
      * @return the idproveedor
      */
-    public int getIdproveedor() {
+    public String getIdproveedor() {
         return idproveedor;
     }
 
     /**
      * @param idproveedor the idproveedor to set
      */
-    public void setIdproveedor(int idproveedor) {
+    public void setIdproveedor(String idproveedor) {
         this.idproveedor = idproveedor;
     }
 

@@ -30,9 +30,10 @@ public class Articulo {
     private float iva;
     private String kit_fecha_ini;
     private String kit_fecha_fin;
-    private boolean articulo_disponible;
+    private int articulo_disponible;
     private boolean kit;
-    private String fecha_registro;    
+    private String fecha_registro;
+    
 
     /**
      * @return the cod_barras
@@ -317,14 +318,14 @@ public class Articulo {
     /**
      * @return the articulo_disponible
      */
-    public boolean isArticulo_disponible() {
+    public int getArticulo_disponible() {
         return articulo_disponible;
     }
 
     /**
      * @param articulo_disponible the articulo_disponible to set
      */
-    public void setArticulo_disponible(boolean articulo_disponible) {
+    public void setArticulo_disponible(int articulo_disponible) {
         this.articulo_disponible = articulo_disponible;
     }
 

@@ -5,6 +5,17 @@
  */
 package Vista;
 
+import Modelo.Articulo;
+import Modelo.Coleccion;
+import com.arangodb.ArangoCursor;
+import com.arangodb.ArangoDB;
+import com.arangodb.ArangoDBException;
+import com.arangodb.entity.BaseDocument;
+import com.arangodb.util.MapBuilder;
+import java.awt.event.ItemEvent;
+import java.util.Map;
+import javax.swing.JComboBox;
+
 /**
  *
  * @author Saul
@@ -16,6 +27,13 @@ public class FrmArticulos extends javax.swing.JFrame {
      */
     public FrmArticulos() {
         initComponents();
+        FillComboDepartamento(cmbDepartamento);
+        FillComboCategoria(cmbCategoria);
+        FillComboSubcategoria(cmbSubCategoria);
+        FillComboProveedores(cmbProveedor);
+        FillComboUnidadMedida(cmbUnidadMedidaPrincipal);
+        FillComboUnidadMedida(cmbUnidadAsociados);
+        //FillComboLinea(cmbLinea);
     }
 
     /**
@@ -48,9 +66,9 @@ public class FrmArticulos extends javax.swing.JFrame {
         cmbCategoria = new javax.swing.JComboBox();
         cmbSubCategoria = new javax.swing.JComboBox();
         etUnidad = new javax.swing.JLabel();
-        cmbUnidad = new javax.swing.JComboBox();
+        cmbUnidadMedidaPrincipal = new javax.swing.JComboBox();
         etCategoria = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
+        spnpiezas = new javax.swing.JSpinner();
         spnStock = new javax.swing.JSpinner();
         etStock = new javax.swing.JLabel();
         spnStockMinimo = new javax.swing.JSpinner();
@@ -76,11 +94,11 @@ public class FrmArticulos extends javax.swing.JFrame {
         txtDescripcionCorta1 = new javax.swing.JTextField();
         etDescripcionCorta1 = new javax.swing.JLabel();
         etUnidad1 = new javax.swing.JLabel();
-        cmbUnidad1 = new javax.swing.JComboBox();
+        cmbUnidadAsociados = new javax.swing.JComboBox();
         etCosto1 = new javax.swing.JLabel();
         txtCosto1 = new javax.swing.JTextField();
         etProveedor3 = new javax.swing.JLabel();
-        jSpinner2 = new javax.swing.JSpinner();
+        spnpiezasasociados = new javax.swing.JSpinner();
         etUtilidad1 = new javax.swing.JLabel();
         txtUtilidad1 = new javax.swing.JTextField();
         etPrecioVenta1 = new javax.swing.JLabel();
@@ -172,6 +190,11 @@ public class FrmArticulos extends javax.swing.JFrame {
         cmbCategoria.setBounds(229, 152, 210, 30);
 
         cmbSubCategoria.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cmbSubCategoria.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbSubCategoriaItemStateChanged(evt);
+            }
+        });
         pnlAnexos.add(cmbSubCategoria);
         cmbSubCategoria.setBounds(480, 150, 210, 30);
 
@@ -180,16 +203,16 @@ public class FrmArticulos extends javax.swing.JFrame {
         pnlAnexos.add(etUnidad);
         etUnidad.setBounds(10, 200, 100, 15);
 
-        cmbUnidad.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlAnexos.add(cmbUnidad);
-        cmbUnidad.setBounds(10, 220, 201, 30);
+        cmbUnidadMedidaPrincipal.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlAnexos.add(cmbUnidadMedidaPrincipal);
+        cmbUnidadMedidaPrincipal.setBounds(10, 220, 201, 30);
 
         etCategoria.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etCategoria.setText("Categoría:");
         pnlAnexos.add(etCategoria);
         etCategoria.setBounds(229, 131, 57, 15);
-        pnlAnexos.add(jSpinner1);
-        jSpinner1.setBounds(230, 220, 210, 30);
+        pnlAnexos.add(spnpiezas);
+        spnpiezas.setBounds(230, 220, 210, 30);
         pnlAnexos.add(spnStock);
         spnStock.setBounds(480, 220, 120, 30);
 
@@ -222,6 +245,11 @@ public class FrmArticulos extends javax.swing.JFrame {
         txtCosto.setBounds(10, 280, 200, 30);
 
         txtUtilidad.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtUtilidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUtilidadActionPerformed(evt);
+            }
+        });
         pnlAnexos.add(txtUtilidad);
         txtUtilidad.setBounds(230, 280, 210, 30);
 
@@ -252,10 +280,15 @@ public class FrmArticulos extends javax.swing.JFrame {
         btnGuardarArticulo.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnGuardarArticulo.setForeground(new java.awt.Color(51, 51, 51));
         btnGuardarArticulo.setText("Guardar artículo");
+        btnGuardarArticulo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarArticuloActionPerformed(evt);
+            }
+        });
         pnlAnexos.add(btnGuardarArticulo);
         btnGuardarArticulo.setBounds(10, 343, 200, 30);
 
-        tbpAsociados.addTab("Anexos", pnlAnexos);
+        tbpAsociados.addTab("Artículo", pnlAnexos);
 
         pnlAsociados.setLayout(null);
 
@@ -300,9 +333,9 @@ public class FrmArticulos extends javax.swing.JFrame {
         pnlAsociados.add(etUnidad1);
         etUnidad1.setBounds(10, 80, 100, 15);
 
-        cmbUnidad1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlAsociados.add(cmbUnidad1);
-        cmbUnidad1.setBounds(10, 100, 170, 30);
+        cmbUnidadAsociados.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlAsociados.add(cmbUnidadAsociados);
+        cmbUnidadAsociados.setBounds(10, 100, 170, 30);
 
         etCosto1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etCosto1.setText("Costo:");
@@ -317,8 +350,8 @@ public class FrmArticulos extends javax.swing.JFrame {
         etProveedor3.setText("Piezas:");
         pnlAsociados.add(etProveedor3);
         etProveedor3.setBounds(210, 80, 40, 15);
-        pnlAsociados.add(jSpinner2);
-        jSpinner2.setBounds(210, 100, 170, 30);
+        pnlAsociados.add(spnpiezasasociados);
+        spnpiezasasociados.setBounds(210, 100, 170, 30);
 
         etUtilidad1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etUtilidad1.setText("Utilidad:");
@@ -326,6 +359,11 @@ public class FrmArticulos extends javax.swing.JFrame {
         etUtilidad1.setBounds(550, 80, 90, 15);
 
         txtUtilidad1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtUtilidad1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUtilidad1ActionPerformed(evt);
+            }
+        });
         pnlAsociados.add(txtUtilidad1);
         txtUtilidad1.setBounds(550, 100, 130, 30);
 
@@ -386,10 +424,233 @@ public class FrmArticulos extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(995, 530));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+    
+    private static void ConsultaridlineaByNombre(String nombrelinea)
+    {
+        int idlinea=0;
+        Coleccion coleccion = new Coleccion();
+        final ArangoDB arangoDB = new 
+          ArangoDB.Builder()
+            .password("")
+            .host("127.0.0.1")
+            .port(8529)
+            .user("root")
+            .build();
+     try {
+  String query = "FOR linea IN Clasificacion FILTER linea.descripcion == @descripcion RETURN linea";
+  Map<String, Object> bindVars = new MapBuilder().put("descripcion",nombrelinea).get();
+  ArangoCursor<BaseDocument> cursor = arangoDB.db(coleccion.getNombrebd()).query(query, bindVars, null,
+      BaseDocument.class);
+  cursor.forEachRemaining(aDocument -> {
+    aDocument.getAttribute("id_clasificacion");
+  });
+} catch (ArangoDBException e) {
+  System.err.println("Failed to execute query. " + e.getMessage());
+}   
+    }
+    
+    private void btnGuardarArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarArticuloActionPerformed
+        Articulo art = new Articulo();
+        art.setArticulo_disponible(1);
+        art.setCantidad_um(Float.parseFloat(spnpiezas.getValue().toString()));
+        //Consultar el id de clasificacion por nombre de la linea
+        //
+        //ConsultaridlineaByNombre("FRITURAS");
+        //FillComboLinea(cmbLinea);
+        FillComboSubcategoria(cmbSubCategoria);
+    }//GEN-LAST:event_btnGuardarArticuloActionPerformed
+
+    private void cmbSubCategoriaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSubCategoriaItemStateChanged
+        if(evt.getStateChange()==ItemEvent.SELECTED)
+        {            
+            cmbLinea.removeAllItems();
+            FillComboLinea(cmbLinea, cmbSubCategoria);
+            
+        }
+         
+    }//GEN-LAST:event_cmbSubCategoriaItemStateChanged
+
+    private void txtUtilidad1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUtilidad1ActionPerformed
+        this.precioVenta();
+    }//GEN-LAST:event_txtUtilidad1ActionPerformed
+
+    private void txtUtilidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUtilidadActionPerformed
+        precioVenta();
+    }//GEN-LAST:event_txtUtilidadActionPerformed
 
     /**
      * @param args the command line arguments
      */
+    
+    private static void FillComboLinea(JComboBox cmbfill, JComboBox cmbConsult)
+    {
+        Coleccion coleccion = new Coleccion();
+        final ArangoDB arangoDB = new 
+          ArangoDB.Builder()
+            .password("")
+            .host("127.0.0.1")
+            .port(8529)
+            .user("root")
+            .build();
+     try {
+        String query = "FOR subcat IN Clasificacion FOR linea IN Clasificacion FILTER subcat.id_clasificacion==linea.id_clasificacion_dep FILTER subcat.descripcion== @descripcion RETURN MERGE(subcat,linea)";
+        Map<String, Object> bindVars = new MapBuilder().put("descripcion",cmbConsult.getSelectedItem().toString()).get();
+        ArangoCursor<BaseDocument> cursor = arangoDB.db(coleccion.getNombrebd()).query(query, bindVars, null,
+        BaseDocument.class);
+        cursor.forEachRemaining(aDocument -> {
+        cmbfill.addItem(aDocument.getAttribute("descripcion"));
+        });
+        
+        }
+        catch (ArangoDBException e)
+        {
+            System.err.println("Failed to execute query. " + e.getMessage());
+        }   
+    }
+    
+    private static void FillComboSubcategoria(JComboBox cmb)
+    {
+        Coleccion coleccion = new Coleccion();
+        final ArangoDB arangoDB = new 
+          ArangoDB.Builder()
+            .password("")
+            .host("127.0.0.1")
+            .port(8529)
+            .user("root")
+            .build();
+     try {
+        String query = "FOR subcategoria IN Clasificacion FILTER subcategoria.nivel_clasificacion == @nivel_clasificacion RETURN subcategoria";
+        Map<String, Object> bindVars = new MapBuilder().put("nivel_clasificacion",3).get();
+        ArangoCursor<BaseDocument> cursor = arangoDB.db(coleccion.getNombrebd()).query(query, bindVars, null,
+        BaseDocument.class);
+        cursor.forEachRemaining(aDocument -> {
+        cmb.addItem(aDocument.getAttribute("descripcion"));
+        });
+        
+        }
+        catch (ArangoDBException e)
+        {
+            System.err.println("Failed to execute query. " + e.getMessage());
+        }
+    }
+    
+    private static void FillComboCategoria(JComboBox cmb)
+    {
+        Coleccion coleccion = new Coleccion();
+        final ArangoDB arangoDB = new 
+          ArangoDB.Builder()
+            .password("")
+            .host("127.0.0.1")
+            .port(8529)
+            .user("root")
+            .build();
+     try {
+        String query = "FOR subcategoria IN Clasificacion FILTER subcategoria.nivel_clasificacion == @nivel_clasificacion RETURN subcategoria";
+        Map<String, Object> bindVars = new MapBuilder().put("nivel_clasificacion",2).get();
+        ArangoCursor<BaseDocument> cursor = arangoDB.db(coleccion.getNombrebd()).query(query, bindVars, null,
+        BaseDocument.class);
+        cursor.forEachRemaining(aDocument -> {
+        cmb.addItem(aDocument.getAttribute("descripcion"));
+        });
+        
+        }
+        catch (ArangoDBException e)
+        {
+            System.err.println("Failed to execute query. " + e.getMessage());
+        }
+    }
+    
+    private static void FillComboDepartamento(JComboBox cmb)
+    {
+        Coleccion coleccion = new Coleccion();
+        final ArangoDB arangoDB = new 
+          ArangoDB.Builder()
+            .password("")
+            .host("127.0.0.1")
+            .port(8529)
+            .user("root")
+            .build();
+     try {
+        String query = "FOR subcategoria IN Clasificacion FILTER subcategoria.nivel_clasificacion == @nivel_clasificacion RETURN subcategoria";
+        Map<String, Object> bindVars = new MapBuilder().put("nivel_clasificacion",1).get();
+        ArangoCursor<BaseDocument> cursor = arangoDB.db(coleccion.getNombrebd()).query(query, bindVars, null,
+        BaseDocument.class);
+        cursor.forEachRemaining(aDocument -> {
+        cmb.addItem(aDocument.getAttribute("descripcion"));
+        });
+        
+        }
+        catch (ArangoDBException e)
+        {
+            System.err.println("Failed to execute query. " + e.getMessage());
+        }
+    }
+    
+    private static void FillComboProveedores (JComboBox cmb)
+    {
+    Coleccion coleccion = new Coleccion();
+        final ArangoDB arangoDB = new 
+          ArangoDB.Builder()
+            .password("")
+            .host("127.0.0.1")
+            .port(8529)
+            .user("root")
+            .build();
+     try {
+        String query = "FOR Proveedor IN Proveedor FILTER Proveedor.@nombre RETURN { nombre: CONCAT(Proveedor.nombrecontacto)}";
+        Map<String, Object> bindVars = new MapBuilder().put("nombre", "nombrecontacto").get();
+        ArangoCursor<BaseDocument> cursor = arangoDB.db(coleccion.getNombrebd()).query(query, bindVars, null,
+        BaseDocument.class);
+        cursor.forEachRemaining(aDocument -> {
+        cmb.addItem(aDocument.getAttribute("nombre"));
+        });
+        
+        }
+        catch (ArangoDBException e)
+        {
+            System.err.println("Failed to execute query. " + e.getMessage());
+        }
+    }
+    
+    private static void FillComboUnidadMedida(JComboBox cmb)
+    {
+        Coleccion coleccion = new Coleccion();
+        final ArangoDB arangoDB = new 
+          ArangoDB.Builder()
+            .password("")
+            .host("127.0.0.1")
+            .port(8529)
+            .user("root")
+            .build();
+     try {
+        String query = "FOR um IN UnidadMedida FILTER um.@descripcion RETURN { descripcion: CONCAT(um.descripcion)}";
+        Map<String, Object> bindVars = new MapBuilder().put("descripcion", "descripcion").get();
+        ArangoCursor<BaseDocument> cursor = arangoDB.db(coleccion.getNombrebd()).query(query, bindVars, null,
+        BaseDocument.class);
+        cursor.forEachRemaining(aDocument -> {
+        cmb.addItem(aDocument.getAttribute("descripcion"));
+        });
+        
+        }
+        catch (ArangoDBException e)
+        {
+            System.err.println("Failed to execute query. " + e.getMessage());
+        }
+    }
+    
+    public void precioVenta()
+	{   
+    	//precioVenta es el resultado de la utilidad por el costo (sin redondear)
+    	double precioVenta = Float.parseFloat(txtCosto.getText()) * Float.parseFloat(txtUtilidad.getText());
+   	 
+    	//redondeoPrecio es la variable que almacena el precio redondeado
+    	double redondeoPrecio;
+    	redondeoPrecio = precioVenta * Math.pow(10, 1);  //aqui se recibe precioVenta para dedondearla
+    	redondeoPrecio = Math.round(redondeoPrecio);
+    	redondeoPrecio = redondeoPrecio/Math.pow(10, 1);
+    	txtPrecioVenta.setText(String.valueOf(redondeoPrecio));
+	}
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -430,8 +691,8 @@ public class FrmArticulos extends javax.swing.JFrame {
     private javax.swing.JComboBox cmbLinea;
     private javax.swing.JComboBox cmbProveedor;
     private javax.swing.JComboBox cmbSubCategoria;
-    private javax.swing.JComboBox cmbUnidad;
-    private javax.swing.JComboBox cmbUnidad1;
+    private javax.swing.JComboBox cmbUnidadAsociados;
+    private javax.swing.JComboBox cmbUnidadMedidaPrincipal;
     private javax.swing.JLabel etCategoria;
     private javax.swing.JLabel etCodigoBarras;
     private javax.swing.JLabel etCodigoBarras1;
@@ -461,13 +722,13 @@ public class FrmArticulos extends javax.swing.JFrame {
     private javax.swing.JLabel etUtilidad;
     private javax.swing.JLabel etUtilidad1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
     private javax.swing.JPanel pnlAnexos;
     private javax.swing.JPanel pnlAsociados;
     private javax.swing.JSpinner spnStock;
     private javax.swing.JSpinner spnStockMaximo;
     private javax.swing.JSpinner spnStockMinimo;
+    private javax.swing.JSpinner spnpiezas;
+    private javax.swing.JSpinner spnpiezasasociados;
     private javax.swing.JTable tblArticulosDesign;
     private javax.swing.JTabbedPane tbpAsociados;
     private javax.swing.JTextField txtCodigoBarras;

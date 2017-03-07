@@ -5,6 +5,7 @@
  */
 package Controlador;
 
+import Modelo.Articulo;
 import Modelo.Clasificacion;
 import Modelo.Coleccion;
 import Modelo.Proveedor;
@@ -32,6 +33,7 @@ public class ctrlarticulo {
             .build();
        
         BaseDocument proveedor = new BaseDocument();
+        proveedor.addAttribute("id_proveedor", provedoradd.getIdproveedor());
         proveedor.addAttribute("rfc", provedoradd.getRfc());
         proveedor.addAttribute("razonsocial", provedoradd.getRazonsocial());
         proveedor.addAttribute("direccion", provedoradd.getDireccion());
@@ -103,26 +105,63 @@ public class ctrlarticulo {
         }
     }
     
-    public static void main(String args[]){
-        /**
-            Proveedor provedor = new Proveedor();
-            provedor.setRfc("QWERFC");
-            provedor.setRazonsocial("BIMBO");
-            provedor.setDireccion("Av. Morelos #21");
-            provedor.setNombrecontacto("RAOS");
-            provedor.setTelefonoprincipal("7731111111");
-            provedor.setTelefonomovil("7732222222");
-            provedor.setEmail("correo@gmail.com");
-            provedor.setEstatus("Disponible");
-            AddAddProveedor(provedor);
-        */
+    public static void AddArticuloPrincipal(Articulo articulo)
+    {
+        Coleccion coleccion = new Coleccion();
+        coleccion.setColeccion("Articulo");
+        final ArangoDB arangoDB = new 
+          ArangoDB.Builder()
+            .password("")
+            .host("127.0.0.1")
+            .port(8529)
+            .user("root")
+            .build();
+        BaseDocument objarticuloprincipal = new BaseDocument();
+        objarticuloprincipal.addAttribute("cod_barras", articulo.getCodbarras());
+        objarticuloprincipal.addAttribute("cod_asociado", articulo.getCodasociados());
+        objarticuloprincipal.addAttribute("cod_interno", articulo.getCodinterno());
+        objarticuloprincipal.addAttribute("descripcion", articulo.getDescripcion());
+        objarticuloprincipal.addAttribute("descripcion_corta",articulo.getDescripcioncorta());
+        objarticuloprincipal.addAttribute("cantidad_um", articulo.getCantidad_um());
+        objarticuloprincipal.addAttribute("id_unidad", articulo.getUnidadmedida().getId_unidad());
+        objarticuloprincipal.addAttribute("id_proveedor", articulo.getProveedor().getIdproveedor());
+        objarticuloprincipal.addAttribute("precio_compra", articulo.getPrecio_compra());
+        objarticuloprincipal.addAttribute("utilidad", articulo.getUtilidad());
+        objarticuloprincipal.addAttribute("precio_venta", articulo.getPrecio_venta());
+        objarticuloprincipal.addAttribute("tipo_articulo", articulo.getTipo_articulo());
+        objarticuloprincipal.addAttribute("iva", articulo.getIva());
+        objarticuloprincipal.addAttribute("iva", articulo.getIva());
+        objarticuloprincipal.addAttribute("articulo_disponible", articulo.getArticulo_disponible());
+        objarticuloprincipal.addAttribute("fecha_registro", articulo.getFecha_registro());
         
-        /**
+    }
+    
+    public static void main(String args[]){
+        
+            /**
+            Proveedor provedor = new Proveedor();
+            provedor.setIdproveedor("DCF14B0E-41B4-4423-B69C-A8D0FC6AB762");
+            provedor.setRfc("CLD-050714-5H6");
+            provedor.setRazonsocial("Comercializadora Corona");
+            provedor.setDireccion("CARR  LAREDO KM 131 NO.114");
+            provedor.setNombrecontacto("CORONA");
+            provedor.setTelefonoprincipal("7772073610");
+            provedor.setTelefonomovil("7782775712");
+            provedor.setEmail("correoCORONA@gmail.com");
+            provedor.setEstatus("activo");
+            AddProveedor(provedor);
+            */
+            
+        
+        
+        
+        /**    
         UnidadMedida unidad = new UnidadMedida();
-        unidad.setId_unidad("92ECBFED-1812-4FBA-8D04-1B6A0AE60839");
-        unidad.setDescripcion("Cja");
+        unidad.setId_unidad("B6988452-9179-46F4-B97B-D44611EB5F18");
+        unidad.setDescripcion("Paq");
         AddUnidadMedida(unidad);
-        * */
+        */ 
+        
         
         /**
         //Inserción ddel departamento de abarrotes

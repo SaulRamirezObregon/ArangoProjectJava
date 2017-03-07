@@ -66,6 +66,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         txtPrecioVenta = new javax.swing.JTextField();
         etPrecioVenta = new javax.swing.JLabel();
         btnGuardarArticulo = new javax.swing.JButton();
+        chbIVA = new javax.swing.JCheckBox();
         pnlAsociados = new javax.swing.JPanel();
         etCodigoBarras1 = new javax.swing.JLabel();
         txtCodigoBarras1 = new javax.swing.JTextField();
@@ -97,7 +98,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etCodigoBarras.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etCodigoBarras.setText("Código de barras:");
         pnlAnexos.add(etCodigoBarras);
-        etCodigoBarras.setBounds(10, 11, 99, 15);
+        etCodigoBarras.setBounds(10, 11, 112, 15);
 
         txtCodigoBarras.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAnexos.add(txtCodigoBarras);
@@ -115,7 +116,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etDescripcionNormal.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etDescripcionNormal.setText("Descripción normal:");
         pnlAnexos.add(etDescripcionNormal);
-        etDescripcionNormal.setBounds(480, 10, 111, 15);
+        etDescripcionNormal.setBounds(480, 10, 124, 15);
 
         txtDescripcionNormal.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAnexos.add(txtDescripcionNormal);
@@ -124,7 +125,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etDescripcionCorta.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etDescripcionCorta.setText("Descripción corta:");
         pnlAnexos.add(etDescripcionCorta);
-        etDescripcionCorta.setBounds(10, 71, 99, 15);
+        etDescripcionCorta.setBounds(10, 71, 114, 15);
 
         txtDescripcionCorta.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAnexos.add(txtDescripcionCorta);
@@ -133,7 +134,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etProveedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etProveedor.setText("Proveedor:");
         pnlAnexos.add(etProveedor);
-        etProveedor.setBounds(480, 70, 59, 15);
+        etProveedor.setBounds(480, 70, 68, 15);
 
         cmbProveedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAnexos.add(cmbProveedor);
@@ -155,7 +156,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etProveedor2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etProveedor2.setText("Piezas:");
         pnlAnexos.add(etProveedor2);
-        etProveedor2.setBounds(230, 200, 40, 15);
+        etProveedor2.setBounds(230, 200, 43, 15);
 
         etSubCategoria.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etSubCategoria.setText("Sub-Categoría:");
@@ -165,7 +166,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etLinea.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etLinea.setText("Línea:");
         pnlAnexos.add(etLinea);
-        etLinea.setBounds(710, 130, 34, 15);
+        etLinea.setBounds(710, 130, 37, 15);
 
         cmbCategoria.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAnexos.add(cmbCategoria);
@@ -187,7 +188,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etCategoria.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etCategoria.setText("Categoría:");
         pnlAnexos.add(etCategoria);
-        etCategoria.setBounds(229, 131, 57, 15);
+        etCategoria.setBounds(229, 131, 65, 15);
         pnlAnexos.add(jSpinner1);
         jSpinner1.setBounds(230, 220, 210, 30);
         pnlAnexos.add(spnStock);
@@ -196,7 +197,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etStock.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etStock.setText("Stock:");
         pnlAnexos.add(etStock);
-        etStock.setBounds(480, 200, 33, 15);
+        etStock.setBounds(480, 200, 39, 15);
         pnlAnexos.add(spnStockMinimo);
         spnStockMinimo.setBounds(640, 220, 120, 30);
 
@@ -215,7 +216,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etCosto.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etCosto.setText("Costo:");
         pnlAnexos.add(etCosto);
-        etCosto.setBounds(10, 260, 36, 15);
+        etCosto.setBounds(10, 260, 40, 15);
 
         txtCosto.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAnexos.add(txtCosto);
@@ -237,7 +238,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etIVA.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etIVA.setText("I.V.A");
         pnlAnexos.add(etIVA);
-        etIVA.setBounds(710, 260, 90, 15);
+        etIVA.setBounds(710, 260, 30, 15);
 
         txtPrecioVenta.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAnexos.add(txtPrecioVenta);
@@ -246,7 +247,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etPrecioVenta.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etPrecioVenta.setText("Precio venta:");
         pnlAnexos.add(etPrecioVenta);
-        etPrecioVenta.setBounds(480, 260, 70, 15);
+        etPrecioVenta.setBounds(480, 260, 82, 15);
 
         btnGuardarArticulo.setBackground(new java.awt.Color(102, 255, 102));
         btnGuardarArticulo.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -254,6 +255,8 @@ public class FrmArticulos extends javax.swing.JFrame {
         btnGuardarArticulo.setText("Guardar artículo");
         pnlAnexos.add(btnGuardarArticulo);
         btnGuardarArticulo.setBounds(10, 343, 200, 30);
+        pnlAnexos.add(chbIVA);
+        chbIVA.setBounds(750, 250, 22, 30);
 
         tbpAsociados.addTab("Anexos", pnlAnexos);
 
@@ -262,7 +265,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etCodigoBarras1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etCodigoBarras1.setText("Código de barras:");
         pnlAsociados.add(etCodigoBarras1);
-        etCodigoBarras1.setBounds(10, 11, 99, 15);
+        etCodigoBarras1.setBounds(10, 11, 112, 15);
 
         txtCodigoBarras1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAsociados.add(txtCodigoBarras1);
@@ -271,7 +274,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etCodigoInterno1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etCodigoInterno1.setText("Código interno:");
         pnlAsociados.add(etCodigoInterno1);
-        etCodigoInterno1.setBounds(210, 10, 84, 15);
+        etCodigoInterno1.setBounds(210, 10, 96, 15);
 
         txtCodigoInterno1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAsociados.add(txtCodigoInterno1);
@@ -280,7 +283,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etDescripcionNormal1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etDescripcionNormal1.setText("Descripción normal:");
         pnlAsociados.add(etDescripcionNormal1);
-        etDescripcionNormal1.setBounds(400, 10, 111, 15);
+        etDescripcionNormal1.setBounds(400, 10, 124, 15);
 
         txtDescripcionNormal1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAsociados.add(txtDescripcionNormal1);
@@ -293,7 +296,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etDescripcionCorta1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etDescripcionCorta1.setText("Descripción corta:");
         pnlAsociados.add(etDescripcionCorta1);
-        etDescripcionCorta1.setBounds(710, 10, 99, 15);
+        etDescripcionCorta1.setBounds(710, 10, 114, 15);
 
         etUnidad1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etUnidad1.setText("Unidad:");
@@ -316,7 +319,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etProveedor3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etProveedor3.setText("Piezas:");
         pnlAsociados.add(etProveedor3);
-        etProveedor3.setBounds(210, 80, 40, 15);
+        etProveedor3.setBounds(210, 80, 43, 15);
         pnlAsociados.add(jSpinner2);
         jSpinner2.setBounds(210, 100, 170, 30);
 
@@ -332,7 +335,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etPrecioVenta1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etPrecioVenta1.setText("Precio venta:");
         pnlAsociados.add(etPrecioVenta1);
-        etPrecioVenta1.setBounds(710, 80, 70, 15);
+        etPrecioVenta1.setBounds(710, 80, 82, 15);
 
         txtPrecioVenta1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAsociados.add(txtPrecioVenta1);
@@ -425,6 +428,7 @@ public class FrmArticulos extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardarArticulo;
     private javax.swing.JButton btnGuardarArticulo1;
+    private javax.swing.JCheckBox chbIVA;
     private javax.swing.JComboBox cmbCategoria;
     private javax.swing.JComboBox cmbDepartamento;
     private javax.swing.JComboBox cmbLinea;

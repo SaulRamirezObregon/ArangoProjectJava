@@ -5,16 +5,24 @@
  */
 package Vista;
 
+import Controlador.ctrlarticulo;
 import Modelo.Articulo;
+import Modelo.Clasificacion;
 import Modelo.Coleccion;
+import Modelo.Proveedor;
+import Modelo.UnidadMedida;
 import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDBException;
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.util.MapBuilder;
 import java.awt.event.ItemEvent;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Map;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import sun.util.BuddhistCalendar;
 
 /**
  *
@@ -25,6 +33,12 @@ public class FrmArticulos extends javax.swing.JFrame {
     /**
      * Creates new form FrmArticulos
      */
+    String idproveedor;
+    int idclasificacion=0;
+    float stock;
+    float stock_min;
+    float stock_max;
+    float iva;
     public FrmArticulos() {
         initComponents();
         FillComboDepartamento(cmbDepartamento);
@@ -33,6 +47,8 @@ public class FrmArticulos extends javax.swing.JFrame {
         FillComboProveedores(cmbProveedor);
         FillComboUnidadMedida(cmbUnidadMedidaPrincipal);
         FillComboUnidadMedida(cmbUnidadAsociados);
+        txtIVA.setEnabled(false);
+        txtDescripcion.setEnabled(false);
         //FillComboLinea(cmbLinea);
     }
 
@@ -84,6 +100,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         txtPrecioVenta = new javax.swing.JTextField();
         etPrecioVenta = new javax.swing.JLabel();
         btnGuardarArticulo = new javax.swing.JButton();
+        chbIva = new javax.swing.JCheckBox();
         pnlAsociados = new javax.swing.JPanel();
         etCodigoBarras1 = new javax.swing.JLabel();
         txtCodigoBarras1 = new javax.swing.JTextField();
@@ -103,9 +120,12 @@ public class FrmArticulos extends javax.swing.JFrame {
         txtUtilidad1 = new javax.swing.JTextField();
         etPrecioVenta1 = new javax.swing.JLabel();
         txtPrecioVenta1 = new javax.swing.JTextField();
-        btnGuardarArticulo1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblArticulosDesign = new javax.swing.JTable();
+        etCodigoBarras2 = new javax.swing.JLabel();
+        txtDescripcion = new javax.swing.JTextField();
+        btnGuardarArticulo2 = new javax.swing.JButton();
+        txtCodigoBarrasAsociado1 = new javax.swing.JTextField();
         etTitulo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -254,7 +274,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         txtUtilidad.setBounds(230, 280, 210, 30);
 
         etUtilidad.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        etUtilidad.setText("Utilidad:");
+        etUtilidad.setText("Utilidad (%):");
         pnlAnexos.add(etUtilidad);
         etUtilidad.setBounds(230, 260, 90, 15);
 
@@ -265,7 +285,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etIVA.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etIVA.setText("I.V.A");
         pnlAnexos.add(etIVA);
-        etIVA.setBounds(710, 260, 90, 15);
+        etIVA.setBounds(710, 260, 30, 15);
 
         txtPrecioVenta.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAnexos.add(txtPrecioVenta);
@@ -288,6 +308,14 @@ public class FrmArticulos extends javax.swing.JFrame {
         pnlAnexos.add(btnGuardarArticulo);
         btnGuardarArticulo.setBounds(10, 343, 200, 30);
 
+        chbIva.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                chbIvaStateChanged(evt);
+            }
+        });
+        pnlAnexos.add(chbIva);
+        chbIva.setBounds(740, 260, 30, 20);
+
         tbpAsociados.addTab("Artículo", pnlAnexos);
 
         pnlAsociados.setLayout(null);
@@ -295,68 +323,68 @@ public class FrmArticulos extends javax.swing.JFrame {
         etCodigoBarras1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etCodigoBarras1.setText("Código de barras:");
         pnlAsociados.add(etCodigoBarras1);
-        etCodigoBarras1.setBounds(10, 11, 99, 15);
+        etCodigoBarras1.setBounds(0, 70, 99, 15);
 
         txtCodigoBarras1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAsociados.add(txtCodigoBarras1);
-        txtCodigoBarras1.setBounds(10, 30, 170, 30);
+        txtCodigoBarras1.setBounds(0, 90, 170, 30);
 
         etCodigoInterno1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etCodigoInterno1.setText("Código interno:");
         pnlAsociados.add(etCodigoInterno1);
-        etCodigoInterno1.setBounds(210, 10, 84, 15);
+        etCodigoInterno1.setBounds(200, 70, 84, 15);
 
         txtCodigoInterno1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAsociados.add(txtCodigoInterno1);
-        txtCodigoInterno1.setBounds(210, 30, 170, 30);
+        txtCodigoInterno1.setBounds(200, 90, 170, 30);
 
         etDescripcionNormal1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etDescripcionNormal1.setText("Descripción normal:");
         pnlAsociados.add(etDescripcionNormal1);
-        etDescripcionNormal1.setBounds(400, 10, 111, 15);
+        etDescripcionNormal1.setBounds(390, 70, 111, 15);
 
         txtDescripcionNormal1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAsociados.add(txtDescripcionNormal1);
-        txtDescripcionNormal1.setBounds(400, 30, 280, 30);
+        txtDescripcionNormal1.setBounds(390, 90, 280, 30);
 
         txtDescripcionCorta1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAsociados.add(txtDescripcionCorta1);
-        txtDescripcionCorta1.setBounds(710, 30, 230, 30);
+        txtDescripcionCorta1.setBounds(700, 90, 230, 30);
 
         etDescripcionCorta1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etDescripcionCorta1.setText("Descripción corta:");
         pnlAsociados.add(etDescripcionCorta1);
-        etDescripcionCorta1.setBounds(710, 10, 99, 15);
+        etDescripcionCorta1.setBounds(700, 70, 99, 15);
 
         etUnidad1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etUnidad1.setText("Unidad:");
         pnlAsociados.add(etUnidad1);
-        etUnidad1.setBounds(10, 80, 100, 15);
+        etUnidad1.setBounds(0, 140, 100, 15);
 
         cmbUnidadAsociados.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAsociados.add(cmbUnidadAsociados);
-        cmbUnidadAsociados.setBounds(10, 100, 170, 30);
+        cmbUnidadAsociados.setBounds(0, 160, 170, 30);
 
         etCosto1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etCosto1.setText("Costo:");
         pnlAsociados.add(etCosto1);
-        etCosto1.setBounds(400, 80, 50, 15);
+        etCosto1.setBounds(390, 140, 50, 15);
 
         txtCosto1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAsociados.add(txtCosto1);
-        txtCosto1.setBounds(400, 100, 130, 30);
+        txtCosto1.setBounds(390, 160, 130, 30);
 
         etProveedor3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etProveedor3.setText("Piezas:");
         pnlAsociados.add(etProveedor3);
-        etProveedor3.setBounds(210, 80, 40, 15);
+        etProveedor3.setBounds(200, 140, 40, 15);
         pnlAsociados.add(spnpiezasasociados);
-        spnpiezasasociados.setBounds(210, 100, 170, 30);
+        spnpiezasasociados.setBounds(200, 160, 170, 30);
 
         etUtilidad1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        etUtilidad1.setText("Utilidad:");
+        etUtilidad1.setText("Utilidad (%):");
         pnlAsociados.add(etUtilidad1);
-        etUtilidad1.setBounds(550, 80, 90, 15);
+        etUtilidad1.setBounds(540, 140, 90, 15);
 
         txtUtilidad1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtUtilidad1.addActionListener(new java.awt.event.ActionListener() {
@@ -365,29 +393,52 @@ public class FrmArticulos extends javax.swing.JFrame {
             }
         });
         pnlAsociados.add(txtUtilidad1);
-        txtUtilidad1.setBounds(550, 100, 130, 30);
+        txtUtilidad1.setBounds(540, 160, 130, 30);
 
         etPrecioVenta1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etPrecioVenta1.setText("Precio venta:");
         pnlAsociados.add(etPrecioVenta1);
-        etPrecioVenta1.setBounds(710, 80, 70, 15);
+        etPrecioVenta1.setBounds(700, 140, 70, 15);
 
         txtPrecioVenta1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAsociados.add(txtPrecioVenta1);
-        txtPrecioVenta1.setBounds(710, 100, 130, 30);
-
-        btnGuardarArticulo1.setBackground(new java.awt.Color(102, 255, 102));
-        btnGuardarArticulo1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btnGuardarArticulo1.setForeground(new java.awt.Color(51, 51, 51));
-        btnGuardarArticulo1.setText("Guardar");
-        pnlAsociados.add(btnGuardarArticulo1);
-        btnGuardarArticulo1.setBounds(850, 100, 90, 30);
+        txtPrecioVenta1.setBounds(700, 160, 130, 30);
 
         tblArticulosDesign.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.lightGray, java.awt.Color.lightGray, java.awt.Color.white));
         jScrollPane1.setViewportView(tblArticulosDesign);
 
         pnlAsociados.add(jScrollPane1);
-        jScrollPane1.setBounds(10, 150, 930, 210);
+        jScrollPane1.setBounds(10, 230, 930, 130);
+
+        etCodigoBarras2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        etCodigoBarras2.setText("Código de barras de articulo principal:");
+        pnlAsociados.add(etCodigoBarras2);
+        etCodigoBarras2.setBounds(0, 30, 220, 15);
+
+        txtDescripcion.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlAsociados.add(txtDescripcion);
+        txtDescripcion.setBounds(440, 20, 210, 30);
+
+        btnGuardarArticulo2.setBackground(new java.awt.Color(102, 255, 102));
+        btnGuardarArticulo2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        btnGuardarArticulo2.setForeground(new java.awt.Color(51, 51, 51));
+        btnGuardarArticulo2.setText("Guardar");
+        btnGuardarArticulo2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarArticulo2ActionPerformed(evt);
+            }
+        });
+        pnlAsociados.add(btnGuardarArticulo2);
+        btnGuardarArticulo2.setBounds(840, 160, 100, 30);
+
+        txtCodigoBarrasAsociado1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtCodigoBarrasAsociado1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCodigoBarrasAsociado1ActionPerformed(evt);
+            }
+        });
+        pnlAsociados.add(txtCodigoBarrasAsociado1);
+        txtCodigoBarrasAsociado1.setBounds(220, 20, 210, 30);
 
         tbpAsociados.addTab("Asociados", pnlAsociados);
 
@@ -398,36 +449,37 @@ public class FrmArticulos extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 979, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tbpAsociados, javax.swing.GroupLayout.PREFERRED_SIZE, 979, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(23, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(60, 60, 60)
-                            .addComponent(etTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 630, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(tbpAsociados, javax.swing.GroupLayout.PREFERRED_SIZE, 979, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGap(60, 77, Short.MAX_VALUE)
+                    .addComponent(etTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 630, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 307, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 491, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(67, Short.MAX_VALUE)
+                .addComponent(tbpAsociados, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addGap(0, 3, Short.MAX_VALUE)
                     .addComponent(etTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(19, 19, 19)
-                    .addComponent(tbpAsociados, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGap(0, 438, Short.MAX_VALUE)))
         );
 
-        setSize(new java.awt.Dimension(995, 530));
+        setSize(new java.awt.Dimension(1030, 530));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     
-    private static void ConsultaridlineaByNombre(String nombrelinea)
+    private int ConsultaridlineaByNombre(String nombrelinea)
     {
         int idlinea=0;
+        Object obj;
         Coleccion coleccion = new Coleccion();
         final ArangoDB arangoDB = new 
           ArangoDB.Builder()
@@ -436,28 +488,172 @@ public class FrmArticulos extends javax.swing.JFrame {
             .port(8529)
             .user("root")
             .build();
+        Clasificacion clasificacion=new Clasificacion();
      try {
   String query = "FOR linea IN Clasificacion FILTER linea.descripcion == @descripcion RETURN linea";
   Map<String, Object> bindVars = new MapBuilder().put("descripcion",nombrelinea).get();
   ArangoCursor<BaseDocument> cursor = arangoDB.db(coleccion.getNombrebd()).query(query, bindVars, null,
       BaseDocument.class);
-  cursor.forEachRemaining(aDocument -> {
-    aDocument.getAttribute("id_clasificacion");
+    
+   cursor.forEachRemaining(aDocument -> {
+     clasificacion.setIdclasificacion(Integer.parseInt(aDocument.getAttribute("id_clasificacion").toString()));
+       //System.out.println(aDocument.getAttribute("id_clasificacion").toString());
   });
+  
+  
 } catch (ArangoDBException e) {
   System.err.println("Failed to execute query. " + e.getMessage());
 }   
+     return clasificacion.getIdclasificacion();
+    }
+    
+    private void CleanFields ()
+    {
+        txtCodigoBarras.setText(" ");
+        txtDescripcionCorta.setText(" ");
+        txtDescripcionNormal.setText(" ");
+        txtCodigoInterno.setText(" ");
+        spnpiezas.setValue(0);
+        spnStock.setValue(0);
+        spnStockMaximo.setValue(0);
+        spnStockMinimo.setValue(0);
+        txtCosto.setText(" ");
+        txtUtilidad.setText(" ");
+        txtPrecioVenta.setText(" ");
+        txtIVA.setText(" ");
+        
+    }
+    
+    private String ConsultarUnidadMedidaByNombre(String unidadmedida)
+    {
+        Coleccion coleccion = new Coleccion();
+        final ArangoDB arangoDB = new 
+          ArangoDB.Builder()
+            .password("")
+            .host("127.0.0.1")
+            .port(8529)
+            .user("root")
+            .build();
+        UnidadMedida unidad =new UnidadMedida();
+     try {
+  String query = "FOR unidad IN UnidadMedida FILTER unidad.descripcion == @descripcion RETURN unidad";
+  Map<String, Object> bindVars = new MapBuilder().put("descripcion",unidadmedida).get();
+  ArangoCursor<BaseDocument> cursor = arangoDB.db(coleccion.getNombrebd()).query(query, bindVars, null,
+      BaseDocument.class);
+    
+   cursor.forEachRemaining(aDocument -> {
+     unidad.setId_unidad(aDocument.getAttribute("id_unidad").toString());
+       //System.out.println(aDocument.getAttribute("id_clasificacion").toString());
+  });
+  
+  
+} catch (ArangoDBException e) {
+  System.err.println("Failed to execute query. " + e.getMessage());
+}   
+     return unidad.getId_unidad();
+    
+    }
+    
+    private void ConsultarArticuloPrincipalByCod_Barras(String codbarras)
+    {
+     Coleccion coleccion = new Coleccion();
+        final ArangoDB arangoDB = new 
+          ArangoDB.Builder()
+            .password("")
+            .host("127.0.0.1")
+            .port(8529)
+            .user("root")
+            .build();
+     try {
+  String query = "FOR art IN Articulo FILTER art.cod_barras == @codbarras AND art.tipo_articulo == \"principal\"  RETURN art";
+  Map<String, Object> bindVars = new MapBuilder().put("codbarras",codbarras).get();
+  ArangoCursor<BaseDocument> cursor = arangoDB.db(coleccion.getNombrebd()).query(query, bindVars, null,
+      BaseDocument.class);
+    
+   cursor.forEachRemaining(aDocument -> {
+       txtDescripcion.setText(aDocument.getAttribute("descripcion_corta").toString());
+       idclasificacion=Integer.parseInt(aDocument.getAttribute("id_clasificacion").toString());
+       idproveedor=aDocument.getAttribute("id_proveedor").toString();
+       stock=Float.parseFloat(aDocument.getAttribute("stock").toString());
+       stock_min=Float.parseFloat(aDocument.getAttribute("stock_min").toString());
+       stock_min=Float.parseFloat(aDocument.getAttribute("stock_max").toString());
+       iva=Float.parseFloat(aDocument.getAttribute("iva").toString());
+  });
+  
+  
+} catch (ArangoDBException e) {
+  System.err.println("Failed to execute query. " + e.getMessage());
+}   
+
+    }
+    
+    private String ConsultarProveedorByNombre(String proveedor)
+    {
+        Coleccion coleccion = new Coleccion();
+        final ArangoDB arangoDB = new 
+          ArangoDB.Builder()
+            .password("")
+            .host("127.0.0.1")
+            .port(8529)
+            .user("root")
+            .build();
+        Proveedor provee =new Proveedor();
+     try {
+  String query = "FOR provee IN Proveedor FILTER provee.nombrecontacto == @descripcion RETURN provee";
+  Map<String, Object> bindVars = new MapBuilder().put("descripcion",proveedor).get();
+  ArangoCursor<BaseDocument> cursor = arangoDB.db(coleccion.getNombrebd()).query(query, bindVars, null,
+      BaseDocument.class);
+    
+   cursor.forEachRemaining(aDocument -> {
+        provee.setIdproveedor(aDocument.getAttribute("id_proveedor").toString());
+       //System.out.println(aDocument.getAttribute("id_clasificacion").toString());
+  });
+  
+  
+} catch (ArangoDBException e) {
+  System.err.println("Failed to execute query. " + e.getMessage());
+}   
+     return provee.getIdproveedor();
     }
     
     private void btnGuardarArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarArticuloActionPerformed
         Articulo art = new Articulo();
-        art.setArticulo_disponible(1);
+        Clasificacion clas = new Clasificacion();
+        UnidadMedida unidad = new UnidadMedida();        
+        Proveedor provee= new Proveedor();
+        Calendar fecharegistro = Calendar.getInstance();
+        art.setCod_barras(txtCodigoBarras.getText());
+        art.setCodinterno(txtCodigoInterno.getText());
+        art.setDescripcion(txtDescripcionNormal.getText().toUpperCase());
+        art.setDescripcioncorta(txtDescripcionCorta.getText().toUpperCase());
+        provee.setIdproveedor(ConsultarProveedorByNombre(cmbProveedor.getSelectedItem().toString()));
+        art.setProveedor(provee);
+        clas.setIdclasificacion(ConsultaridlineaByNombre(cmbLinea.getSelectedItem().toString()));
+        art.setClasificacion(clas);
+        unidad.setId_unidad(ConsultarUnidadMedidaByNombre(cmbUnidadMedidaPrincipal.getSelectedItem().toString()));
+        art.setUnidadmedida(unidad);
         art.setCantidad_um(Float.parseFloat(spnpiezas.getValue().toString()));
-        //Consultar el id de clasificacion por nombre de la linea
-        //
-        //ConsultaridlineaByNombre("FRITURAS");
-        //FillComboLinea(cmbLinea);
-        FillComboSubcategoria(cmbSubCategoria);
+        art.setStock(Integer.parseInt(spnStock.getValue().toString()));
+        art.setStock_min(Float.parseFloat(spnStockMinimo.getValue().toString()));
+        art.setStock_max(Float.parseFloat(spnStockMaximo.getValue().toString()));
+        art.setPrecio_compra(Float.parseFloat(txtCosto.getText()));
+        art.setUtilidad(Float.parseFloat(txtUtilidad.getText()));
+        art.setPrecio_venta(Float.parseFloat(txtPrecioVenta.getText()));
+        if(chbIva.isSelected())
+        {
+            art.setIva(Float.parseFloat(txtIVA.getText()));
+        }else
+        {
+            art.setIva(0);
+            
+        }
+        art.setFecha_registro(fecharegistro.get(Calendar.DAY_OF_MONTH)+"/"+fecharegistro.get(Calendar.MONTH)+"/"+fecharegistro.get(Calendar.YEAR));
+        art.setArticulo_disponible(1);
+        art.setCodasociados("--");
+        art.setTipo_articulo("principal");
+        ctrlarticulo.AddArticuloPrincipal(art);
+        JOptionPane.showMessageDialog(null, "El artículo "+txtDescripcionNormal.getText().toUpperCase()+" fue registrado exitosamente");
+        CleanFields();
     }//GEN-LAST:event_btnGuardarArticuloActionPerformed
 
     private void cmbSubCategoriaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSubCategoriaItemStateChanged
@@ -471,12 +667,62 @@ public class FrmArticulos extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbSubCategoriaItemStateChanged
 
     private void txtUtilidad1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUtilidad1ActionPerformed
-        this.precioVenta();
+        this.precioVentaAnexo();
     }//GEN-LAST:event_txtUtilidad1ActionPerformed
 
     private void txtUtilidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUtilidadActionPerformed
         precioVenta();
     }//GEN-LAST:event_txtUtilidadActionPerformed
+
+    private void chbIvaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chbIvaStateChanged
+        if(chbIva.isSelected())
+        {
+            txtIVA.setEnabled(true);
+            txtIVA.setText("");
+        }else
+        {
+            txtIVA.setEnabled(false);
+            txtIVA.setText("0");
+        }
+        
+    }//GEN-LAST:event_chbIvaStateChanged
+
+    private void btnGuardarArticulo2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarArticulo2ActionPerformed
+        Articulo art = new Articulo();
+        Clasificacion clas = new Clasificacion();
+        UnidadMedida unidad = new UnidadMedida();        
+        Proveedor provee= new Proveedor();
+        Calendar fecharegistro = Calendar.getInstance();
+        art.setCod_barras(txtCodigoBarras1.getText());
+        art.setCodinterno(txtCodigoInterno1.getText());
+        art.setDescripcion(txtDescripcionNormal1.getText().toUpperCase());
+        art.setDescripcioncorta(txtDescripcionCorta1.getText().toUpperCase());
+        provee.setIdproveedor(idproveedor);
+        art.setProveedor(provee);
+        clas.setIdclasificacion(idclasificacion);
+        art.setClasificacion(clas);
+        unidad.setId_unidad(ConsultarUnidadMedidaByNombre(cmbUnidadAsociados.getSelectedItem().toString()));
+        art.setUnidadmedida(unidad);
+        art.setCantidad_um(Float.parseFloat(spnpiezasasociados.getValue().toString()));
+        art.setStock(stock);
+        art.setStock_min(stock_min);
+        art.setStock_max(stock_max);
+        art.setPrecio_compra(Float.parseFloat(txtCosto1.getText()));
+        art.setUtilidad(Float.parseFloat(txtUtilidad1.getText()));
+        art.setPrecio_venta(Float.parseFloat(txtPrecioVenta1.getText()));
+        art.setIva(iva);
+        art.setFecha_registro(fecharegistro.get(Calendar.DAY_OF_MONTH)+"/"+fecharegistro.get(Calendar.MONTH)+"/"+fecharegistro.get(Calendar.YEAR));
+        art.setArticulo_disponible(1);
+        art.setCodasociados(txtCodigoBarrasAsociado1.getText());
+        art.setTipo_articulo("anexo");
+        ctrlarticulo.AddArticuloPrincipal(art);
+        JOptionPane.showMessageDialog(null, "El artículo anexo "+txtDescripcionNormal1.getText().toUpperCase()+" fue registrado exitosamente");
+        CleanFields();
+    }//GEN-LAST:event_btnGuardarArticulo2ActionPerformed
+
+    private void txtCodigoBarrasAsociado1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoBarrasAsociado1ActionPerformed
+        ConsultarArticuloPrincipalByCod_Barras(txtCodigoBarrasAsociado1.getText());
+    }//GEN-LAST:event_txtCodigoBarrasAsociado1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -641,7 +887,8 @@ public class FrmArticulos extends javax.swing.JFrame {
     public void precioVenta()
 	{   
     	//precioVenta es el resultado de la utilidad por el costo (sin redondear)
-    	double precioVenta = Float.parseFloat(txtCosto.getText()) * Float.parseFloat(txtUtilidad.getText());
+    	double precioVentaPorcentaje = Float.parseFloat(txtCosto.getText()) * Float.parseFloat("0."+txtUtilidad.getText());
+        double precioVenta=Float.parseFloat(txtCosto.getText())+precioVentaPorcentaje;
    	 
     	//redondeoPrecio es la variable que almacena el precio redondeado
     	double redondeoPrecio;
@@ -649,6 +896,20 @@ public class FrmArticulos extends javax.swing.JFrame {
     	redondeoPrecio = Math.round(redondeoPrecio);
     	redondeoPrecio = redondeoPrecio/Math.pow(10, 1);
     	txtPrecioVenta.setText(String.valueOf(redondeoPrecio));
+	}
+    
+    public void precioVentaAnexo()
+	{   
+    	//precioVenta es el resultado de la utilidad por el costo (sin redondear)
+    	double precioVentaPorcentaje = Float.parseFloat(txtCosto1.getText()) * Float.parseFloat("0."+txtUtilidad1.getText());
+        double precioVenta=Float.parseFloat(txtCosto1.getText())+precioVentaPorcentaje;
+   	 
+    	//redondeoPrecio es la variable que almacena el precio redondeado
+    	double redondeoPrecio;
+    	redondeoPrecio = precioVenta * Math.pow(10, 1);  //aqui se recibe precioVenta para dedondearla
+    	redondeoPrecio = Math.round(redondeoPrecio);
+    	redondeoPrecio = redondeoPrecio/Math.pow(10, 1);
+    	txtPrecioVenta1.setText(String.valueOf(redondeoPrecio));
 	}
     
     public static void main(String args[]) {
@@ -685,7 +946,8 @@ public class FrmArticulos extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardarArticulo;
-    private javax.swing.JButton btnGuardarArticulo1;
+    private javax.swing.JButton btnGuardarArticulo2;
+    private javax.swing.JCheckBox chbIva;
     private javax.swing.JComboBox cmbCategoria;
     private javax.swing.JComboBox cmbDepartamento;
     private javax.swing.JComboBox cmbLinea;
@@ -696,6 +958,7 @@ public class FrmArticulos extends javax.swing.JFrame {
     private javax.swing.JLabel etCategoria;
     private javax.swing.JLabel etCodigoBarras;
     private javax.swing.JLabel etCodigoBarras1;
+    private javax.swing.JLabel etCodigoBarras2;
     private javax.swing.JLabel etCodigoInterno;
     private javax.swing.JLabel etCodigoInterno1;
     private javax.swing.JLabel etCosto;
@@ -733,10 +996,12 @@ public class FrmArticulos extends javax.swing.JFrame {
     private javax.swing.JTabbedPane tbpAsociados;
     private javax.swing.JTextField txtCodigoBarras;
     private javax.swing.JTextField txtCodigoBarras1;
+    private javax.swing.JTextField txtCodigoBarrasAsociado1;
     private javax.swing.JTextField txtCodigoInterno;
     private javax.swing.JTextField txtCodigoInterno1;
     private javax.swing.JTextField txtCosto;
     private javax.swing.JTextField txtCosto1;
+    private javax.swing.JTextField txtDescripcion;
     private javax.swing.JTextField txtDescripcionCorta;
     private javax.swing.JTextField txtDescripcionCorta1;
     private javax.swing.JTextField txtDescripcionNormal;
@@ -748,3 +1013,4 @@ public class FrmArticulos extends javax.swing.JFrame {
     private javax.swing.JTextField txtUtilidad1;
     // End of variables declaration//GEN-END:variables
 }
+

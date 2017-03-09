@@ -11,7 +11,7 @@ package Modelo;
  */
 public class Articulo {
     private String cod_barras;
-    private String codbarras;
+    
     private String codasociados;
     private Clasificacion clasificacion;
     private String codinterno;
@@ -49,23 +49,7 @@ public class Articulo {
         this.cod_barras = cod_barras;
     }
 
-    /**
-     * @return the codbarras
-     */
-    public String getCodbarras() {
-        return codbarras;
-    }
-
-    /**
-     * @param codbarras the codbarras to set
-     */
-    public void setCodbarras(String codbarras) {
-        this.codbarras = codbarras;
-    }
-
-    /**
-     * @return the codasociados
-     */
+   
     public String getCodasociados() {
         return codasociados;
     }

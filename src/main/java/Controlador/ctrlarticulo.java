@@ -117,12 +117,16 @@ public class ctrlarticulo {
             .user("root")
             .build();
         BaseDocument objarticuloprincipal = new BaseDocument();
-        objarticuloprincipal.addAttribute("cod_barras", articulo.getCodbarras());
+        objarticuloprincipal.addAttribute("cod_barras", articulo.getCod_barras());
         objarticuloprincipal.addAttribute("cod_asociado", articulo.getCodasociados());
+        objarticuloprincipal.addAttribute("id_clasificacion", articulo.getClasificacion().getIdclasificacion());
         objarticuloprincipal.addAttribute("cod_interno", articulo.getCodinterno());
         objarticuloprincipal.addAttribute("descripcion", articulo.getDescripcion());
         objarticuloprincipal.addAttribute("descripcion_corta",articulo.getDescripcioncorta());
         objarticuloprincipal.addAttribute("cantidad_um", articulo.getCantidad_um());
+        objarticuloprincipal.addAttribute("stock", articulo.getStock());
+        objarticuloprincipal.addAttribute("stock_min", articulo.getStock_min());
+        objarticuloprincipal.addAttribute("stock_max", articulo.getStock_max());
         objarticuloprincipal.addAttribute("id_unidad", articulo.getUnidadmedida().getId_unidad());
         objarticuloprincipal.addAttribute("id_proveedor", articulo.getProveedor().getIdproveedor());
         objarticuloprincipal.addAttribute("precio_compra", articulo.getPrecio_compra());
@@ -130,10 +134,58 @@ public class ctrlarticulo {
         objarticuloprincipal.addAttribute("precio_venta", articulo.getPrecio_venta());
         objarticuloprincipal.addAttribute("tipo_articulo", articulo.getTipo_articulo());
         objarticuloprincipal.addAttribute("iva", articulo.getIva());
-        objarticuloprincipal.addAttribute("iva", articulo.getIva());
         objarticuloprincipal.addAttribute("articulo_disponible", articulo.getArticulo_disponible());
         objarticuloprincipal.addAttribute("fecha_registro", articulo.getFecha_registro());
+        try 
+        {
+          arangoDB.db(coleccion.getNombrebd()).collection(coleccion.getColeccion()).insertDocument(objarticuloprincipal);
+          System.out.println("Document created");   
+        } catch (Exception e) 
+        {
+            System.err.println("Failed to create document. " + e.getMessage());
+        }
         
+    }
+    
+    public static void AddArticuloAnexo(Articulo articuloanexo)
+    {
+                Coleccion coleccion = new Coleccion();
+        coleccion.setColeccion("ArticuloAnexo");
+        final ArangoDB arangoDB = new 
+          ArangoDB.Builder()
+            .password("")
+            .host("127.0.0.1")
+            .port(8529)
+            .user("root")
+            .build();
+        BaseDocument objarticuloprincipal = new BaseDocument();
+        objarticuloprincipal.addAttribute("cod_barras", articuloanexo.getCod_barras());
+        objarticuloprincipal.addAttribute("cod_asociado", articuloanexo.getCodasociados());
+        objarticuloprincipal.addAttribute("id_clasificacion", articuloanexo.getClasificacion().getIdclasificacion());
+        objarticuloprincipal.addAttribute("cod_interno", articuloanexo.getCodinterno());
+        objarticuloprincipal.addAttribute("descripcion", articuloanexo.getDescripcion());
+        objarticuloprincipal.addAttribute("descripcion_corta",articuloanexo.getDescripcioncorta());
+        objarticuloprincipal.addAttribute("cantidad_um", articuloanexo.getCantidad_um());
+        objarticuloprincipal.addAttribute("stock", articuloanexo.getStock());
+        objarticuloprincipal.addAttribute("stock_min", articuloanexo.getStock_min());
+        objarticuloprincipal.addAttribute("stock_max", articuloanexo.getStock_max());
+        objarticuloprincipal.addAttribute("id_unidad", articuloanexo.getUnidadmedida().getId_unidad());
+        objarticuloprincipal.addAttribute("id_proveedor", articuloanexo.getProveedor().getIdproveedor());
+        objarticuloprincipal.addAttribute("precio_compra", articuloanexo.getPrecio_compra());
+        objarticuloprincipal.addAttribute("utilidad", articuloanexo.getUtilidad());
+        objarticuloprincipal.addAttribute("precio_venta", articuloanexo.getPrecio_venta());
+        objarticuloprincipal.addAttribute("tipo_articulo", articuloanexo.getTipo_articulo());
+        objarticuloprincipal.addAttribute("iva", articuloanexo.getIva());
+        objarticuloprincipal.addAttribute("articulo_disponible", articuloanexo.getArticulo_disponible());
+        objarticuloprincipal.addAttribute("fecha_registro", articuloanexo.getFecha_registro());
+        try 
+        {
+          arangoDB.db(coleccion.getNombrebd()).collection(coleccion.getColeccion()).insertDocument(objarticuloprincipal);
+          System.out.println("Document created");   
+        } catch (Exception e) 
+        {
+            System.err.println("Failed to create document. " + e.getMessage());
+        }
     }
     
     public static void main(String args[]){

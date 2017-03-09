@@ -99,8 +99,8 @@ public class FrmArticulos extends javax.swing.JFrame {
         etIVA = new javax.swing.JLabel();
         txtPrecioVenta = new javax.swing.JTextField();
         etPrecioVenta = new javax.swing.JLabel();
-        btnGuardarArticulo = new javax.swing.JButton();
         chbIva = new javax.swing.JCheckBox();
+        txtGuardarPrincipal = new javax.swing.JButton();
         pnlAsociados = new javax.swing.JPanel();
         etCodigoBarras1 = new javax.swing.JLabel();
         txtCodigoBarras1 = new javax.swing.JTextField();
@@ -285,7 +285,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         etIVA.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         etIVA.setText("I.V.A");
         pnlAnexos.add(etIVA);
-        etIVA.setBounds(710, 260, 30, 15);
+        etIVA.setBounds(720, 260, 30, 15);
 
         txtPrecioVenta.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlAnexos.add(txtPrecioVenta);
@@ -296,25 +296,22 @@ public class FrmArticulos extends javax.swing.JFrame {
         pnlAnexos.add(etPrecioVenta);
         etPrecioVenta.setBounds(480, 260, 70, 15);
 
-        btnGuardarArticulo.setBackground(new java.awt.Color(102, 255, 102));
-        btnGuardarArticulo.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btnGuardarArticulo.setForeground(new java.awt.Color(51, 51, 51));
-        btnGuardarArticulo.setText("Guardar artículo");
-        btnGuardarArticulo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarArticuloActionPerformed(evt);
-            }
-        });
-        pnlAnexos.add(btnGuardarArticulo);
-        btnGuardarArticulo.setBounds(10, 343, 200, 30);
-
         chbIva.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 chbIvaStateChanged(evt);
             }
         });
         pnlAnexos.add(chbIva);
-        chbIva.setBounds(740, 260, 30, 20);
+        chbIva.setBounds(760, 260, 30, 20);
+
+        txtGuardarPrincipal.setText("Guardar");
+        txtGuardarPrincipal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtGuardarPrincipalActionPerformed(evt);
+            }
+        });
+        pnlAnexos.add(txtGuardarPrincipal);
+        txtGuardarPrincipal.setBounds(40, 340, 110, 25);
 
         tbpAsociados.addTab("Artículo", pnlAnexos);
 
@@ -616,7 +613,7 @@ public class FrmArticulos extends javax.swing.JFrame {
      return provee.getIdproveedor();
     }
     
-    private void btnGuardarArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarArticuloActionPerformed
+    private void btnGuardarArticuloActionPerformed(java.awt.event.ActionEvent evt) {                                                   
         Articulo art = new Articulo();
         Clasificacion clas = new Clasificacion();
         UnidadMedida unidad = new UnidadMedida();        
@@ -654,7 +651,7 @@ public class FrmArticulos extends javax.swing.JFrame {
         ctrlarticulo.AddArticuloPrincipal(art);
         JOptionPane.showMessageDialog(null, "El artículo "+txtDescripcionNormal.getText().toUpperCase()+" fue registrado exitosamente");
         CleanFields();
-    }//GEN-LAST:event_btnGuardarArticuloActionPerformed
+    }                                                  
 
     private void cmbSubCategoriaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSubCategoriaItemStateChanged
         if(evt.getStateChange()==ItemEvent.SELECTED)
@@ -723,6 +720,46 @@ public class FrmArticulos extends javax.swing.JFrame {
     private void txtCodigoBarrasAsociado1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoBarrasAsociado1ActionPerformed
         ConsultarArticuloPrincipalByCod_Barras(txtCodigoBarrasAsociado1.getText());
     }//GEN-LAST:event_txtCodigoBarrasAsociado1ActionPerformed
+
+    private void txtGuardarPrincipalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGuardarPrincipalActionPerformed
+        Articulo art = new Articulo();
+        Clasificacion clas = new Clasificacion();
+        UnidadMedida unidad = new UnidadMedida();        
+        Proveedor provee= new Proveedor();
+        Calendar fecharegistro = Calendar.getInstance();
+        art.setCod_barras(txtCodigoBarras.getText());
+        art.setCodinterno(txtCodigoInterno.getText());
+        art.setDescripcion(txtDescripcionNormal.getText().toUpperCase());
+        art.setDescripcioncorta(txtDescripcionCorta.getText().toUpperCase());
+        provee.setIdproveedor(ConsultarProveedorByNombre(cmbProveedor.getSelectedItem().toString()));
+        art.setProveedor(provee);
+        clas.setIdclasificacion(ConsultaridlineaByNombre(cmbLinea.getSelectedItem().toString()));
+        art.setClasificacion(clas);
+        unidad.setId_unidad(ConsultarUnidadMedidaByNombre(cmbUnidadMedidaPrincipal.getSelectedItem().toString()));
+        art.setUnidadmedida(unidad);
+        art.setCantidad_um(Float.parseFloat(spnpiezas.getValue().toString()));
+        art.setStock(Integer.parseInt(spnStock.getValue().toString()));
+        art.setStock_min(Float.parseFloat(spnStockMinimo.getValue().toString()));
+        art.setStock_max(Float.parseFloat(spnStockMaximo.getValue().toString()));
+        art.setPrecio_compra(Float.parseFloat(txtCosto.getText()));
+        art.setUtilidad(Float.parseFloat(txtUtilidad.getText()));
+        art.setPrecio_venta(Float.parseFloat(txtPrecioVenta.getText()));
+        if(chbIva.isSelected())
+        {
+            art.setIva(Float.parseFloat(txtIVA.getText()));
+        }else
+        {
+            art.setIva(0);
+            
+        }
+        art.setFecha_registro(fecharegistro.get(Calendar.DAY_OF_MONTH)+"/"+fecharegistro.get(Calendar.MONTH)+"/"+fecharegistro.get(Calendar.YEAR));
+        art.setArticulo_disponible(1);
+        art.setCodasociados("--");
+        art.setTipo_articulo("principal");
+        ctrlarticulo.AddArticuloPrincipal(art);
+        JOptionPane.showMessageDialog(null, "El artículo "+txtDescripcionNormal.getText().toUpperCase()+" fue registrado exitosamente");
+        CleanFields();
+    }//GEN-LAST:event_txtGuardarPrincipalActionPerformed
 
     /**
      * @param args the command line arguments
@@ -945,7 +982,6 @@ public class FrmArticulos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnGuardarArticulo;
     private javax.swing.JButton btnGuardarArticulo2;
     private javax.swing.JCheckBox chbIva;
     private javax.swing.JComboBox cmbCategoria;
@@ -1006,6 +1042,7 @@ public class FrmArticulos extends javax.swing.JFrame {
     private javax.swing.JTextField txtDescripcionCorta1;
     private javax.swing.JTextField txtDescripcionNormal;
     private javax.swing.JTextField txtDescripcionNormal1;
+    private javax.swing.JButton txtGuardarPrincipal;
     private javax.swing.JTextField txtIVA;
     private javax.swing.JTextField txtPrecioVenta;
     private javax.swing.JTextField txtPrecioVenta1;

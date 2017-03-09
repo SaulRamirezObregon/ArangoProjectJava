@@ -24,7 +24,7 @@ public class Conexion {
         //Creacion de la conexion
         final ArangoDB arangoDB = new 
           ArangoDB.Builder()
-            .password("")
+            .password("1234")
             .host("127.0.0.1")
             .port(8529)
             .user("root")
